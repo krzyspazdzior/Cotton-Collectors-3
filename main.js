@@ -1,16 +1,17 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
-const img = document.getElementById("whip");
 
-
+let img = new Image();
+img.src = "Whip/Whip_1.png";
 
 canvas.width = 1200;
 canvas.height = 800;
 c.fillStyle = 'green';
 c.fillRect(0, 0, canvas.width, canvas.height);
 
-
-
+function sleep(ms = 0) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 class Sprite {
     constructor({position, velocity, color}) {
@@ -21,13 +22,23 @@ class Sprite {
         this.height = 50;
     };
     
-    draw() {
+    async draw() {
         c.fillStyle = this.color;
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
         if(this.color == "white"){
-            c.drawImage(img, this.position.x-60, this.position.y-60, img.width*0.5, img.height*0.5);
+            if (!keys.space.pressed) {
+                c.drawImage(img, this.position.x-120, this.position.y-125, img.width*0.08, img.height*0.08);
+            } else {
+                keys.space.pressed = false;
+                for (let i = 1; i <= 10; i++) {
+                    img.src = "Whip/Whip_" + i + ".png";
+                    c.drawImage(img, this.position.x-120, this.position.y-125, img.width*0.08, img.height*0.08);
+                    await sleep(50);
+                }
+                img.src = "Whip/Whip_1.png";
+            }
         }
     };
     
@@ -36,8 +47,8 @@ class Sprite {
 
 const player = new Sprite({
     position: {
-        x: 0,
-        y: 0
+        x: 500,
+        y: 500
     },
     velocity: {
         x: 0,
@@ -47,8 +58,8 @@ const player = new Sprite({
 });
 const nigger = new Sprite({
     position: {
-        x: 150,
-        y: 150
+        x: 300,
+        y: 300
     },
     velocity: {
         x: 0,
@@ -68,6 +79,9 @@ const keys = {
       pressed: false
   },
   s: {
+      pressed: false
+  },
+  space: {
       pressed: false
   }
 };
@@ -104,6 +118,11 @@ document.addEventListener('keydown', function (event) {
         if(keys.s.pressed == false){
             player.velocity.y += 2;
             keys.s.pressed = true;
+        }
+        break;
+      case ' ':
+        if(keys.space.pressed == false){
+            keys.space.pressed = true;
         }
         break;
     }
