@@ -21,7 +21,7 @@ class Sprite {
         this.width = 50;
         this.height = 50;
     };
-    
+
     async draw() {
         c.fillStyle = this.color;
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
@@ -38,7 +38,18 @@ class Sprite {
                     await sleep(50);
                 }
                 img.src = "Whip/Whip_1.png";
-            }
+}
+        }
+        //kolizje ze scianami
+        if (this.position.x < 0) {
+            this.position.x = 0;
+        } else if (this.position.x + this.width > canvas.width) {
+            this.position.x = canvas.width - this.width;
+        }
+        if (this.position.y < 0) {
+            this.position.y = 0;
+        } else if (this.position.y + this.height > canvas.height) {
+            this.position.y = canvas.height - this.height;
         }
     };
     
